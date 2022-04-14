@@ -45,4 +45,10 @@ class CustomAdapter(var ct: Context, arraylist: ArrayList<*>) : ArrayAdapter<Any
         }
         return cv
     }
+
+    fun update(obj: ArrayList<HashMap<String, String>>) {
+        al = ArrayList<Any?>()
+        (al as ArrayList<Any?>).addAll(obj!!)
+        notifyDataSetChanged()
+    }
 }

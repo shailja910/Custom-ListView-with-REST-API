@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Menu
 import android.widget.ListView
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -31,7 +34,11 @@ class MainActivity : AppCompatActivity() {
     var str:String?=null
     private val urlLink = "https://www.cbc.ca/aggregate_api/v1/items?lineupSlug=news"
 
+    //to pick image from URL
     var imageurl: String? = null
+
+    //filter on the basis of type
+    var type: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -70,11 +77,13 @@ class MainActivity : AppCompatActivity() {
                     val imgFolderStr = jsonobj.getString("images")
                     val imgJsonObj = JSONObject(imgFolderStr)
                     imageurl = imgJsonObj.getString("square_140")
+
+                    type = jsonobj.getString("type")
                     val hmap = HashMap<String, String?>()
                     hmap["title"] = title
                     hmap["date"] = date
                     hmap["image"] = imageurl
-
+                    hmap["type"] = type
 
                     //assigning hashmap objectsto arraylist
                     arraylist.add(hmap)
@@ -89,16 +98,41 @@ class MainActivity : AppCompatActivity() {
                 a.printStackTrace()
             }
 
-        runOnUiThread({  //for postexecution tasks
+            runOnUiThread {  //for postexecution tasks
+            }
 
-        })
-
-        //to transfer the control back to main thread, where we will call the custom adapter
-        var handler = Handler(Looper.getMainLooper())
-        handler.post({
-            val customAdapter = CustomAdapter(this@MainActivity, arraylist)
-            listview?.setAdapter(customAdapter)
-        })
+            //to transfer the control back to main thread, where we will call the custom adapter
+            var handler = Handler(Looper.getMainLooper())
+            handler.post {
+                val customAdapter = CustomAdapter(this@MainActivity, arraylist)
+                listview?.setAdapter(customAdapter)
+            }
+        }
     }
+
+
+//to implement search operation on the basis of type
+override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        val search = menu.findItem(R.id.search_id) //from menu file
+        val sv = search.actionView as SearchView
+        sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Toast.makeText(this@MainActivity, query, Toast.LENGTH_SHORT).show()
+                return true
+        }
+
+        override fun onQueryTextChange(newText: String): Boolean {
+            val obj = ArrayList<HashMap<String, String>>()
+            for (x in arraylist) {
+                if (x["type"]!!.contains(newText)) {
+                    obj.add(x as HashMap<String, String>)
+                } }
+            val p = listview!!.adapter as CustomAdapter
+            p.update(obj)
+                return false
+            }}) //search closed
+        return true
     }
 }
+
