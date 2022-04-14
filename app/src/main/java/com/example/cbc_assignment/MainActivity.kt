@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     var str:String?=null
     private val urlLink = "https://www.cbc.ca/aggregate_api/v1/items?lineupSlug=news"
 
+    var imageurl: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -66,9 +67,14 @@ class MainActivity : AppCompatActivity() {
                     title = jsonobj.getString("title")
 
                     //putting attributes of each json object nto hashmap
+                    val imgFolderStr = jsonobj.getString("images")
+                    val imgJsonObj = JSONObject(imgFolderStr)
+                    imageurl = imgJsonObj.getString("square_140")
                     val hmap = HashMap<String, String?>()
                     hmap["title"] = title
                     hmap["date"] = date
+                    hmap["image"] = imageurl
+
 
                     //assigning hashmap objectsto arraylist
                     arraylist.add(hmap)

@@ -8,6 +8,7 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -24,19 +25,24 @@ class CustomAdapter(var ct: Context, arraylist: ArrayList<*>) : ArrayAdapter<Any
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var cv = convertView
         val inflat = ct.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        convertView = inflat.inflate(R.layout.activity_template, null)
-        val tv1 = convertView.findViewById<TextView>(R.id.tv1)
-        val tv2 = convertView.findViewById<TextView>(R.id.tv2)
-         for (i in al.indices) {
+        cv = inflat.inflate(R.layout.activity_template, null)
+        val tv1 = cv.findViewById<TextView>(R.id.tv1)
+        val tv2 = cv.findViewById<TextView>(R.id.tv2)
+        val iv = cv.findViewById<ImageView>(R.id.iv)
+        for (i in al.indices) {
             var map: HashMap<String?, String?>
-            map = al[position] as HashMap<String?, String?>
+            map = al[position]as HashMap<String?, String?>
             val getTitle = map["title"]
             val getDate = map["date"]
+            val getImage = map["image"]
+            Glide.with(ct)
+                .load(getImage)
+                .into(iv)
             tv1.text = getTitle
             tv2.text = getDate
         }
-        return convertView
+        return cv
     }
 }
