@@ -1,4 +1,4 @@
-# CBC_Assignment
+# Custom Listview populated from url json objects
 Assignment purpose is to create the custom listview and the data is extracted from the API URL. This assignemnt has three Modules:
 
 
