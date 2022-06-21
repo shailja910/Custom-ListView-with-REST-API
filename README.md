@@ -30,3 +30,4 @@ We will use the connectivity manager.
 whenever there will be any network change, the will be broad casted to the applications.
 The broadcast receiver is registered with this mainactivity ,it will get the info of network whether the app is connected to cellular, wifi or no internet.
 it will return the status of the network to the broadcast receiver which is whoen on the alert dialog box.
+ABC
